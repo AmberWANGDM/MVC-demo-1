@@ -11426,15 +11426,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var $tabBar = (0, _jquery2.default)('.tab-bar');
 var $tabContent = (0, _jquery2.default)('.tab-content');
+var localKey = 'app2-index';
+var index = localStorage.getItem(localKey) || 0;
 
 $tabBar.on('click', 'li', function (e) {
   var $tab = (0, _jquery2.default)(e.target);
   // tab栏切换
   $tab.addClass('active').siblings().removeClass('active');
-  var $index = $tab.index();
+  var index = $tab.index();
+  localStorage.setItem(localKey, index);
   // 内容切换
-  $tabContent.children().eq($index).addClass('active').siblings().removeClass('active');
+  $tabContent.children().eq(index).addClass('active').siblings().removeClass('active');
 });
+
+$tabBar.children().eq(index).trigger('click'); // 注意这句话
 },{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app3.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
@@ -11452,9 +11457,20 @@ require('./app3.css');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var $box = (0, _jquery2.default)('.box');
+var localKey = 'app3-new';
+var ifNew = localStorage.getItem(localKey) === 'yes';
 
-$box.on('mouseenter', function () {
-  $box.toggleClass('new');
+// toggleClass可以接收第二个参数,如果这个参数为true,就加new
+$box.toggleClass('new', ifNew);
+
+$box.on('click', function () {
+  if ($box.hasClass('new')) {
+    $box.removeClass('new');
+    localStorage.setItem(localKey, 'no');
+  } else {
+    $box.addClass('new');
+    localStorage.setItem(localKey, 'yes');
+  }
 });
 },{"jquery":"../node_modules/jquery/dist/jquery.js","./app3.css":"app3.css"}],"app4.css":[function(require,module,exports) {
 
@@ -11520,7 +11536,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '64363' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54827' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
